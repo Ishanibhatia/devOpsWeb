@@ -10,5 +10,23 @@ pipeline{
 				sh "docker build . -t tomcatwebapp:${env.BUILD_ID}"
 			}
 		}
+
+		stage('Rollback') {
+            when {
+                failure() // Execute rollback stage only on deployment failure
+            }
+            steps {
+                // Execute rollback script
+                sh './rollback.sh'
+            }
+        }
+
+        post {
+            always {
+            // Clean up resources, notify stakeholders, etc.
+            }
+        }
 	}
+
+
 }
